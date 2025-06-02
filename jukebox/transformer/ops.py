@@ -135,6 +135,10 @@ def filter_logits(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
         # Shift the indices to the right to keep also the first token above the threshold
         sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
         sorted_indices_to_remove[..., 0] = 0
+        
+        # fix dtype as suggested by nikhilsos:
+        # https://github.com/legoodmanner/jukedrummer/issues/3#issue-3027192105
+        sorted_indices_to_remove = t.tensor(sorted_indices_to_remove, dtype=t.uint8)
 
         #indices_to_remove = sorted_indices[sorted_indices_to_remove]
         indices_to_remove = t.zeros_like(logits, dtype=t.uint8).scatter_(dim=-1, index=sorted_indices, src=sorted_indices_to_remove)
