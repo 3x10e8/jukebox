@@ -2,7 +2,7 @@ import numpy as np
 import torch as t
 import torch.nn as nn
 import torch.nn.functional as F
-import jukebox.utils.dist_adapter as dist
+#import jukebox.utils.dist_adapter as dist
 
 class BottleneckBlock(nn.Module):
     def __init__(self, k_bins, emb_width, mu):
@@ -34,7 +34,7 @@ class BottleneckBlock(nn.Module):
         # init k_w using random vectors from x
         y = self._tile(x)
         _k_rand = y[t.randperm(y.shape[0])][:k_bins]
-        dist.broadcast(_k_rand, 0)
+        #dist.broadcast(_k_rand, 0)
         self.k = _k_rand
         assert self.k.shape == (k_bins, emb_width)
         self.k_sum = self.k
@@ -64,9 +64,9 @@ class BottleneckBlock(nn.Module):
             y = self._tile(x)
             _k_rand = y[t.randperm(y.shape[0])][:k_bins]
 
-            dist.broadcast(_k_rand, 0)
-            dist.all_reduce(_k_sum)
-            dist.all_reduce(_k_elem)
+            #dist.broadcast(_k_rand, 0)
+            #dist.all_reduce(_k_sum)
+            #dist.all_reduce(_k_elem)
 
             # Update centres
             old_k = self.k
